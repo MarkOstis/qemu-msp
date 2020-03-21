@@ -7,6 +7,8 @@
 #include "hw/loader.h"
 
 #define MSP430_RAM_SIZE (16*0x1000)
+#define MSP430_FRAM_SIZE (16*1024)
+#define FLASH_BASE_ADDRESS 0x8000
 
 static void msp430f5x_boot(MSP430Cpu *cpu, MachineState *args)
 {
@@ -23,7 +25,7 @@ static void msp430f5x_boot(MSP430Cpu *cpu, MachineState *args)
 
     // Attempt to load kernel file in the appropriate location. This will
     // load the memory at the flash address.
-    kernel_size = load_image_targphys(kernel_filename, 0x400, MSP430_RAM_SIZE);
+    kernel_size = load_image_targphys(kernel_filename, FLASH_BASE_ADDRESS, MSP430_FRAM_SIZE);
     if (kernel_size < 0)
     {
         fprintf(stderr, "Unable to load firmware to MSP430. Exiting.\n");
