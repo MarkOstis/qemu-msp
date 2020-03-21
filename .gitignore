@@ -116,3 +116,5 @@ TAGS
 docker-src.*
 *~
 build
+.vscode
+qemu-version.h
