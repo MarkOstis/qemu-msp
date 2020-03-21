@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "loader.h": "c",
-        "qemu-options-wrapper.h": "c",
-        "*.def": "c"
-    }
-}
