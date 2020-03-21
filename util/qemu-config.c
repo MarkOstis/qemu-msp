@@ -172,6 +172,10 @@ static QemuOptsList machine_opts = {
             .type = QEMU_OPT_STRING,
             .help = "Linux kernel image file",
         },{
+            .name = "mcu",
+            .type = QEMU_OPT_STRING,
+            .help = "MCU type for board",
+        },{
             .name = "initrd",
             .type = QEMU_OPT_STRING,
             .help = "Linux initial ramdisk file",

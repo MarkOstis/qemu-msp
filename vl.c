@@ -293,6 +293,21 @@ static QemuOptsList qemu_machine_opts = {
     },
 };
 
+static QemuOptsList qemu_mcu_opts = {
+    .name = "mcu",
+    .implied_opt_name = "type",
+    .merge_lists = true,
+    .head = QTAILQ_HEAD_INITIALIZER(qemu_mcu_opts.head),
+    .desc = {
+        /*
+         * no elements => accept any
+         * sanity checking will happen later
+         * when setting machine properties
+         */
+        { }
+    },
+};
+
 static QemuOptsList qemu_boot_opts = {
     .name = "boot-opts",
     .implied_opt_name = "order",
@@ -2987,6 +3002,7 @@ int main(int argc, char **argv, char **envp)
     qemu_add_opts(&qemu_trace_opts);
     qemu_add_opts(&qemu_option_rom_opts);
     qemu_add_opts(&qemu_machine_opts);
+    qemu_add_opts(&qemu_mcu_opts);
     qemu_add_opts(&qemu_mem_opts);
     qemu_add_opts(&qemu_smp_opts);
     qemu_add_opts(&qemu_boot_opts);
@@ -3656,6 +3672,10 @@ int main(int argc, char **argv, char **envp)
                 if (!opts) {
                     exit(1);
                 }
+                break;
+            case QEMU_OPTION_mcu:
+                qemu_opts_set(qemu_find_opts("machine"), 0, "mcu", optarg,
+                              &error_abort);                
                 break;
              case QEMU_OPTION_no_kvm:
                 olist = qemu_find_opts("machine");

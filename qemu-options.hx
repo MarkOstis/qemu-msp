@@ -2835,6 +2835,14 @@ Use @var{bzImage} as kernel image. The kernel can be either a Linux kernel
 or in multiboot format.
 ETEXI
 
+DEF("mcu", HAS_ARG, QEMU_OPTION_mcu,
+    "-mcu        selects emulated mcu for board\n", QEMU_ARCH_ALL)
+STEXI
+@item -mcu @var{mcu}
+@findex -mcu
+Selects emulated mcu for board
+ETEXI
+
 DEF("append", HAS_ARG, QEMU_OPTION_append, \
     "-append cmdline use 'cmdline' as kernel command line\n", QEMU_ARCH_ALL)
 STEXI

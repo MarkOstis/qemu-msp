@@ -171,6 +171,7 @@ struct MachineState {
     char *initrd_filename;
     const char *cpu_model;
     AccelState *accelerator;
+    char *mcu;
 };
 
 #define DEFINE_MACHINE(namestr, machine_initfn) \

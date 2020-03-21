@@ -115,6 +115,22 @@ static void machine_set_kernel(Object *obj, const char *value, Error **errp)
     ms->kernel_filename = g_strdup(value);
 }
 
+static char *machine_get_mcu(Object *obj, Error **errp)
+{
+    MachineState *ms = MACHINE(obj);
+
+    return g_strdup(ms->mcu);
+}
+
+static void machine_set_mcu(Object *obj, const char *value, Error **errp)
+{
+    MachineState *ms = MACHINE(obj);
+
+    g_free(ms->mcu);
+    ms->mcu = g_strdup(value);
+}
+
+
 static char *machine_get_initrd(Object *obj, Error **errp)
 {
     MachineState *ms = MACHINE(obj);
@@ -410,6 +426,11 @@ static void machine_initfn(Object *obj)
                             machine_get_kernel, machine_set_kernel, NULL);
     object_property_set_description(obj, "kernel",
                                     "Linux kernel image file",
+                                    NULL);
+    object_property_add_str(obj, "mcu",
+                            machine_get_mcu, machine_set_mcu, NULL);
+    object_property_set_description(obj, "mcu",
+                                    "MCU type for board",
                                     NULL);
     object_property_add_str(obj, "initrd",
                             machine_get_initrd, machine_set_initrd, NULL);
