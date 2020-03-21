@@ -629,7 +629,7 @@ static void msp430_translate_format2(MSP430CpuState *env, DisasmContext *ctx)
     msp430_access_size access = 0;
     msp430_format2 *fmt = &ctx->fmt.type2;
     msp430_opcode opcodeTable[] = { RRC, SWPB, RRA, SXT, 
-                                    PUSH, CALL, RETI, INVALID };
+                                    PUSH, CALL, RETI, CALLA, INVALID };
     //fprintf(stdout, "MSP430 Translate: Decoding Format 2 Instruction\n");
 
     // Update the formatting of the 
@@ -734,6 +734,7 @@ static void msp430_translate_format2(MSP430CpuState *env, DisasmContext *ctx)
             msp430_operand_postamble(&fmt->dest, access);
             break;
 
+        case CALLA:
         case CALL:
             // Check to see if BW is set to 0, if the bit is not set to zero,
             // then there is an invalid decoding of the instruction.
@@ -1254,6 +1255,8 @@ static void msp430_generate_tcg_code(MSP430CpuState *env, TranslationBlock *tb, 
         msp430_decode_opcode(env, &ctx);
         blockSize += (ctx.instr_len << 1);
         pc_idx += (ctx.instr_len << 1);
+
+        tcg_gen_insn_start(ctx.pc);
         instrCount++;
 
         /* Close the TranslationBlock so it can used by QEMU to execute and store for 
