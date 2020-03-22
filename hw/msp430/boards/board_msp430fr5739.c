@@ -37,7 +37,7 @@ static void b_msp430fr5739_init(MachineState *args)
         exit(1);
     }
 
-    msp430_mcu_device *mcu = MSP430FR5739_MCU(obj);
+    MSP430Mcu *mcu = MSP430FR5739_MCU(obj);
     mcu->kernel_filename = args->kernel_filename;
 
     Error *err = NULL;

@@ -11,14 +11,15 @@
 #include "qemu/error-report.h"
 #include "qapi/error.h"
 
-#define MSP430_RAM_SIZE (16*0x1000)
+#define MSP430_RAM_SIZE (0x400)
 #define MSP430_FRAM_SIZE (16*1024)
-#define FLASH_BASE_ADDRESS 0x8000
+#define FLASH_BASE_ADDRESS 0xC200
 
+#define MSP430_MCU MSP430FR5739_MCU
 
 static void msp430_mcu_boot(DeviceState *dev)
 {
-    msp430_mcu_device *mcu = MSP430FR5739_MCU(dev);
+    MSP430Mcu *mcu = MSP430_MCU(dev);
     int kernel_size;
 
     // Check to see if we have a kernel file specified. If we don't, then
@@ -66,19 +67,30 @@ static void msp430_mcu_reset(DeviceState *dev)
 static void msp430_mcu_instance_init(Object *obj)
 {
     MSP430Cpu *cpu;
+    MSP430Mcu *mcu = MSP430_MCU(obj);
+    MemoryRegion *system_memory = get_system_memory();
+
     const char *cpu_model = "msp430";
-    MemoryRegion *toplevel = get_system_memory();
-    MemoryRegion *sram = g_new(MemoryRegion, 1);
-    
     cpu = cpu_msp430_init(cpu_model);
     if (!cpu) {
         fprintf(stderr, "Unable to find CPU definition\n");
         exit(1);
     }
 
-    memory_region_init_ram(sram, NULL, "msp430.ram", MSP430_RAM_SIZE, NULL);
-    vmstate_register_ram_global(sram);
-    memory_region_add_subregion(toplevel, 0x400, sram);
+    // Create Flash/Info and Flash Controller
+     mcu->flash_mem_addr = FLASH_BASE_ADDRESS;
+    mcu->flash_mem_size = MSP430_FRAM_SIZE;
+    mcu->flash_mem = qdev_create(NULL, "msp430fr5739_flashrom");
+    qdev_init_nofail(mcu->flash_mem);
+//    sysbus_mmio_map(SYS_BUS_DEVICE(mcu->flash_mem), 0, mcu->flash_mem_addr);
+
+    // Create SRAM Region
+    mcu->sram_mem_addr = 0x1c00;
+    mcu->sram_mem_size = MSP430_RAM_SIZE;    
+    mcu->sram_mem = g_new(MemoryRegion, 1);
+    memory_region_init_ram(mcu->sram_mem, NULL, "msp430.ram",  mcu->sram_mem_size, NULL);
+    memory_region_add_subregion(system_memory, mcu->sram_mem_addr, mcu->sram_mem);
+    vmstate_register_ram_global(mcu->sram_mem);
 
     return;
 }
@@ -115,7 +127,7 @@ static void msp430_mcu_class_init(ObjectClass *klass, void *data)
 static const TypeInfo msp430_mcu_info = {
     .name          = TYPE_MSP430FR5739_MCU,
     .parent        = TYPE_SYS_BUS_DEVICE,
-    .instance_size = sizeof(msp430_mcu_device),
+    .instance_size = sizeof(MSP430Mcu),
     .instance_init = msp430_mcu_instance_init,
     .class_init    = msp430_mcu_class_init,
 };

@@ -42,7 +42,7 @@ static void msp430_cpu_reset(CPUState *s)
     
     // uint8_t *rom = rom_ptr(0xFFFE);
     // uint32_t resetAddr = (0xFFFE & ldl_p(rom));
-    state->regs[MSP430_PC_REGISTER] = 0x8000;
+    state->regs[MSP430_PC_REGISTER] = 0xC200;
     tlb_flush(s, 1);
 }
 

@@ -15,3 +15,4 @@ obj-$(CONFIG_VIRTIO) += virtio-blk.o
 obj-$(CONFIG_VIRTIO) += dataplane/
 
 obj-$(CONFIG_MSP430) += msp430x1_flashrom.o
+obj-$(CONFIG_MSP430) += msp430fr5739_flashrom.o
