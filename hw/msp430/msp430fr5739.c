@@ -92,6 +92,10 @@ static void msp430_mcu_instance_init(Object *obj)
     memory_region_add_subregion(system_memory, mcu->sram_mem_addr, mcu->sram_mem);
     vmstate_register_ram_global(mcu->sram_mem);
 
+    DeviceState *gpio = qdev_create(NULL, "msp430fr5739_port_a");
+    qdev_init_nofail(gpio);
+    sysbus_mmio_map(SYS_BUS_DEVICE(gpio), 0, 0x0200);
+
     return;
 }
 
