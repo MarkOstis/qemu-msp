@@ -8,5 +8,3 @@ common-obj-$(CONFIG_GPIO_KEY) += gpio_key.o
 obj-$(CONFIG_OMAP) += omap_gpio.o
 obj-$(CONFIG_IMX) += imx_gpio.o
 obj-$(CONFIG_MSP430) += msp430_gpio.o
-obj-$(CONFIG_MSP430) += msp430fr5x_gpio.o
-obj-$(CONFIG_MSP430) += MSP430FR5739_Port_A.o

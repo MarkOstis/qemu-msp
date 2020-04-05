@@ -44,7 +44,7 @@ typedef struct
     uint32_t deviceBaseAddr;
 } msp430_peripheral;
 
-msp430_peripheral periphs[] = 
+static msp430_peripheral periphs[] = 
 {
     {"msp430_svs",      0x0055},
     {"msp430_watchdog", 0x0120},
