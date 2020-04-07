@@ -317,6 +317,8 @@ typedef struct {
    uint32_t p2ies;
    uint32_t p2ie;
    uint32_t p2ifg;
+
+   // qemu_irq irq_test[8];
 } MSP430_Port_1_2_State;
 
 
@@ -370,6 +372,7 @@ static void reg_p1out_write(MSP430_Port_1_2_State *dev, uint32_t *reg, uint32_t 
     uint32_t new_value = (val << (offset * 8))  & REG_P1OUT_BITS_MASK;
     if ((*reg) != new_value) {
         if ((new_value & REG_P1OUT_P1OUT0_BITS_MASK) != ((*reg) & REG_P1OUT_P1OUT0_BITS_MASK)) {
+//             qemu_set_irq(dev->irq_test, 0);
         }
 
         if ((new_value & REG_P1OUT_P1OUT1_BITS_MASK) != ((*reg) & REG_P1OUT_P1OUT1_BITS_MASK)) {
@@ -1230,11 +1233,25 @@ static const MemoryRegionOps mmio_ops= {
     .endianness = DEVICE_NATIVE_ENDIAN,
 };
 
+// static void handle_irq_test(void *opaque, int irq, int req)
+// {
+//     printf("PORT IRQ Handled irq= %d, req= %d\n");
+// }
+
+
 static void device_init_callback(Object *obj) {
     MSP430_Port_1_2_State *s = MSP430FR5739_PORT_1_2(obj);
 
     memory_region_init_io(&s->region, obj, &mmio_ops, s, TYPE_MSP430FR5739_PORT_1_2, SIZE);
     sysbus_init_mmio(SYS_BUS_DEVICE(obj), &s->region);
+
+//    sysbus_init_irq(SYS_BUS_DEVICE(obj), s->irq_test);
+
+    // qdev_init_gpio_out_named(DEVICE(obj), s->irq_test, "port_1_2-out", 8);
+    // qdev_init_gpio_in_named(DEVICE(obj), &handle_irq_test, "port_1_2-in", 8);
+
+    // qemu_irq irq_in = qdev_get_gpio_in_named(DEVICE(obj), "port_1_2-in", 0);
+    // qdev_connect_gpio_out_named(DEVICE(obj), "port_1_2-out", 1, irq_in);
 }
 
 static void device_release_callback(DeviceState *dev, Error **errp) {
