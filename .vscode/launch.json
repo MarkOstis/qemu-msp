@@ -15,7 +15,7 @@
             "-mcu",
             "msp430fr5739_mcu",
             "-kernel",
-            "/mnt/d/workspaces/IAR/msp430_flash_gpio/430/examples/Flashing the LED/Flashing the LED/msp430x5xx/C-source/Debug/Exe/msp430x5xx (C).bin",
+            "/mnt/d/workspaces/IAR/msp430_flash_gpio/430/examples/Flashing the LED/Flashing the LED/msp430x5xx/C-source/Debug/Exe/msp430x5xx (C).a43",
             "-nographic"
           ],
           "stopAtEntry": false,
@@ -30,6 +30,14 @@
                   "ignoreFailures": true
               }
           ]
+      },
+      {
+        "name": "Python: Current File (Integrated Terminal)",
+        "type": "python",
+        "request": "launch",
+        "program": "${file}",
+        "console": "integratedTerminal",
+        "cwd": "${workspaceFolder}/hw/msp430/mcus_db/tools",
       }
   ]
 }
